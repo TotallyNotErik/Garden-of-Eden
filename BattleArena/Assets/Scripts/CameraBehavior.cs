@@ -10,14 +10,13 @@ public class CameraBehavior : MonoBehaviour
 	private Transform target;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        target = GameObject.Find("Player").transform;
+        target = GameObject.Find("CameraFocus").transform;
 
     }
 
-    // Update is called once per frame
+
     void LateUpdate()
     {
         this.transform.position = target.TransformPoint(camOffset);
