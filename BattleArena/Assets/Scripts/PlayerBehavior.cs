@@ -11,14 +11,6 @@ public class PlayerBehavior : MonoBehaviour
  	public float rotateSpeed = .25f;
     public float gravityVel = 9.8f;
     public float distanceToGround = 0.1f;
-    private int Magazine = 8;
-
-    private double reloadTime = 2.5;
-    private double reloadTimer = 8.0;
-
-    private double dashCooldown = 5.0;
-    private double dashTimer = 0.0;
-
 
     public GameObject bullet;
     public float bulletSpeed = 100f;
@@ -60,48 +52,31 @@ public class PlayerBehavior : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact)
         {
-            if ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25 && Time.timeAsDouble > dashTimer + dashCooldown )
+            if ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25 && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown )
             {
-                Debug.LogFormat("Dashing!");
                 this.transform.position += 5 * this.transform.forward;
 
-                dashTimer = Time.timeAsDouble;
+                gameManager.dashTimer = Time.timeAsDouble;
             }
            
         }
 
         if (gameManager.RedArtifact)
         {
-            if (Input.GetMouseButtonDown(0) && Magazine > 0)
+            if (Input.GetMouseButtonDown(0) && gameManager.Magazine > 0)
             {
                 GameObject newBullet = Instantiate(bullet, this.transform.position + new Vector3(1, 0, 0), this.transform.rotation) as GameObject;
                 Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
                 bulletRB.velocity = this.transform.forward * bulletSpeed;
-                Magazine--;
-                if (Magazine == 0)
-                {
-                    Debug.LogFormat("MUST RELOAD");
-                    reloadTimer = Time.timeAsDouble;
-                }
+                gameManager.Magazine--;
             }
 
-            if (Time.timeAsDouble >= reloadTimer + reloadTime && Magazine == 0)
+            if (Time.timeAsDouble >= gameManager.reloadTimer + gameManager.reloadTime && gameManager.Magazine == 0)
             {
-                Magazine = 8;
-                Debug.LogFormat("Done Reloading!");
+                gameManager.Magazine = 8;
             }
         }
-        /*
-        if (Input.GetKey(KeyCode.A))
-        {
-            input.x = -0.5f;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-           input.x = 0.5f;
-        }
-        else { input.x = 0f; }
-        */
+
 
         camInput = Input.GetAxis("Horizontal") * rotateSpeed;
         _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
@@ -115,8 +90,6 @@ public class PlayerBehavior : MonoBehaviour
     void FixedUpdate()
     {
         _rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime); 
-
-        /*_rb.MovePosition(this.transform.position + this.transform.right * hInput * Time.fixedDeltaTime);*/
     }
 
     private bool IsGrounded()
