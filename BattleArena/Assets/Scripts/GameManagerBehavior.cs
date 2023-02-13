@@ -1,10 +1,104 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagerBehavior : MonoBehaviour
 {
-    // Start is called before the first frame update
+
+
+    public string labelText = "Collect all the items and win your freedom!";
+    public int maxItems = 3;
+
+    private int _itemsCollected = 0;
+    private bool Blue = false;
+    private bool Yellow = false;
+    private bool Red = false;
+    private bool win = false;
+
+    public bool showWinScreen
+    {
+        get { return win; }
+        set { win = value; }
+    }
+    public int Items
+    {
+        get { return _itemsCollected; }
+        set
+        {
+            _itemsCollected = value;
+            Debug.LogFormat("Items: {0}", _itemsCollected);
+
+            if (_itemsCollected >= maxItems)
+            {
+                labelText = "You've found all the Artifacts!";
+            }
+            else
+            {
+                labelText = "Artifacts Found, only " + (maxItems - _itemsCollected) + " more to go!";
+            }
+        }
+    }
+
+    public bool RedArtifact
+    {
+        get { return Red; }
+        set
+        {
+            Red = value;
+        }
+    }
+
+    public bool BlueArtifact
+    {
+        get { return Blue; }
+        set
+        {
+            Blue = value;
+        }
+    }
+
+    public bool YellowArtifact
+    {
+        get { return Yellow; }
+        set
+        {
+            Yellow = value;
+        }
+    }
+    private int _playerHP = 10;
+
+    public int HP
+    {
+        get { return _playerHP; }
+        set
+        {
+            _playerHP = value;
+            Debug.LogFormat("Lives: {0}", _playerHP);
+        }
+    }
+
+    void OnGUI()
+    {
+        GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + _playerHP);
+
+        GUI.Box(new Rect(20, 50, 150, 25), "Items Collected:" + _itemsCollected);
+
+        GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height - 50, 300, 50), labelText);
+
+        if (showWinScreen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!"))
+            {
+                SceneManager.LoadScene(0);
+
+                Time.timeScale = 1.0f;
+            }
+        }
+    }
+
     void Start()
     {
         Cursor.visible = false;

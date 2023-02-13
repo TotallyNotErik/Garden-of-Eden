@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class RedOrbBehavior : MonoBehaviour
 {
+    public GameManagerBehavior gameManager;
+
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+    }
+
     void OnCollisionEnter(Collision collision)
     {
 
@@ -13,6 +20,9 @@ public class RedOrbBehavior : MonoBehaviour
             Destroy(this.transform.parent.gameObject);
 
             Debug.Log("You Have Collected the Red Artifact!");
+
+            gameManager.Items += 1;
+            gameManager.RedArtifact = true;
         }
     }
 

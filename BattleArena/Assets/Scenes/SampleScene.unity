@@ -2542,6 +2542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4e32679ab356b42873e98bd871b358, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
 --- !u!1 &607761526
 GameObject:
   m_ObjectHideFlags: 0
@@ -2921,7 +2922,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0.02, y: 7.45, z: -0.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3365,11 +3366,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfe2ed861f1ba6e4e84f16846216b059, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   jumpVelocity: 7
   moveSpeed: 10
   rotateSpeed: 10
   gravityVel: 9.8
   distanceToGround: 0.1
+  bullet: {fileID: 3378504792192950110, guid: 21a1cd70c47d93f4f9d5c3211bef2cb4, type: 3}
+  bulletSpeed: 100
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -3407,6 +3411,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7002b0e0b1b78564d9e3c02c6c2af4a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  labelText: Collect the Artifacts to gain more power!
+  maxItems: 3
 --- !u!4 &896081084
 Transform:
   m_ObjectHideFlags: 0
@@ -3766,6 +3772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e2d09c3d643af2a478460f95ffe10321, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
 --- !u!1 &1023812801
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,6 +3887,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54817e322f5540e45aa838a29e40d3ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
 --- !u!1 &1126608370
 GameObject:
   m_ObjectHideFlags: 0
@@ -4476,6 +4484,8 @@ GameObject:
   - component: {fileID: 1322187119}
   - component: {fileID: 1322187118}
   - component: {fileID: 1322187117}
+  - component: {fileID: 1322187121}
+  - component: {fileID: 1322187120}
   m_Layer: 6
   m_Name: Platform (1)
   m_TagString: Untagged
@@ -4561,6 +4571,32 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1322187115}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1322187120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322187115}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 500e9d698a8519f4097e5a4da8094333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 896081083}
+--- !u!135 &1322187121
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1322187115}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1328076553
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4776,15 +4812,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2167191576313747578, guid: f1f84d95146a2194d8a5a92f1a8e9df9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.3383522
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2167191576313747578, guid: f1f84d95146a2194d8a5a92f1a8e9df9, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.5324411
+      value: 2.6
       objectReference: {fileID: 0}
     - target: {fileID: 2167191576313747578, guid: f1f84d95146a2194d8a5a92f1a8e9df9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.20702744
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2167191576313747578, guid: f1f84d95146a2194d8a5a92f1a8e9df9, type: 3}
       propertyPath: m_LocalRotation.w

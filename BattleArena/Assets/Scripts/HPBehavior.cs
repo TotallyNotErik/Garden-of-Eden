@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class HPBehavior : MonoBehaviour
 {
+    public GameManagerBehavior gameManager;
+
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+    }
+
     void OnCollisionEnter(Collision collision)
     {
 
@@ -12,7 +19,9 @@ public class HPBehavior : MonoBehaviour
 
             Destroy(this.transform.parent.gameObject);
 
-            Debug.Log("Health Restored!");
+            Debug.Log("Health Boosted!");
+
+            gameManager.HP += 5;
         }
     }
 

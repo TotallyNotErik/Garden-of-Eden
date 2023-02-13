@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class ItemBehavior : MonoBehaviour
 {
- void OnCollisionEnter(Collision collision)
- {
+    public GameManagerBehavior gameManager;
+    void Start()
+    {
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+    }
 
- 	if(collision.gameObject.name == "Player")
- 	{
+    void OnCollisionEnter(Collision collision)
+    {
 
- 	Destroy(this.transform.parent.gameObject);
+ 	    if(collision.gameObject.name == "Player")
+ 	    {
 
- 	Debug.Log("You have collected the Yellow Artifact!");
-	}	
- }
+ 	        Destroy(this.transform.parent.gameObject);
+
+ 	        Debug.Log("You have collected the Yellow Artifact!");
+
+            gameManager.Items += 1;
+            gameManager.YellowArtifact = true;
+
+        }	
+    }
 
 }
