@@ -22,6 +22,11 @@ public class PlayerBehavior : MonoBehaviour
 	private Rigidbody _rb;
     private CapsuleCollider _col;
 
+    private float moveMultiplier = 1f;
+
+    private float charge = 0.0f;
+    private float maxCharge = 5.0f;
+    private bool charging = true;
 
 
 
@@ -38,19 +43,31 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKey(KeyCode.W))
         {
             input.z = 1f;
+
         }
         else if (Input.GetKey(KeyCode.S))
         {
             input.z = -1f;
+
         }
-        else { input.z = 0f; }
+        else { input.z = 0f;}
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            input.x = -0.75f;
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            input.x = 0.75f;
+        }
+        else { input.x = 0f; }
 
         if (Input.GetKeyDown(KeyCode.Space) && gameManager.BlueArtifact && IsGrounded())
         {
             _rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact && gameManager.RedArtifact && gameManager.BlueArtifact)
         {
             if ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25 && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown )
             {
@@ -65,7 +82,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && gameManager.Magazine > 0)
             {
-                GameObject newBullet = Instantiate(bullet, this.transform.position + new Vector3(1, 0, 0), this.transform.rotation) as GameObject;
+                GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(1, 0, 0), this.transform.rotation) as GameObject;
                 Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
                 bulletRB.velocity = this.transform.forward * bulletSpeed;
                 gameManager.Magazine--;
@@ -76,6 +93,40 @@ public class PlayerBehavior : MonoBehaviour
                 gameManager.Magazine = 8;
             }
         }
+	
+        if (Input.GetMouseButton(1) && gameManager.YellowArtifact && Time.time > 3 + gameManager.chargeTimer + (gameManager.chargeTime * gameManager.cdMultiplier))
+        {
+		    if (Input.GetMouseButtonDown(1)) {
+			    charge = Time.time;
+		    }
+             moveMultiplier = 0.25f;
+           	 charging = true;
+
+
+        }
+        else
+       		{
+           	 if (charging && Time.time - charge > maxCharge)
+           	 {
+                _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
+                charging = false;
+                gameManager.cdMultiplier = maxCharge;
+                gameManager.chargeTimer = Time.time;
+                 charge = Time.time;
+
+            }
+            	else if (charging)
+            	{
+                	_rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge);
+               	 	charging = false;
+                    gameManager.cdMultiplier = (Time.time - charge);
+                    gameManager.chargeTimer = Time.time;
+                    charge = Time.time;
+                 }
+  
+            	moveMultiplier = 1f;
+       	}
+	
         _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
 
         camInput = Input.GetAxis("Horizontal") * rotateSpeed;
@@ -89,7 +140,11 @@ public class PlayerBehavior : MonoBehaviour
 
     void FixedUpdate()
     {
-        _rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime); 
+        /*_rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime);
+        _rb.MovePosition(this.transform.position + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
+        */
+        if (((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x >= -14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x <= 14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z >= -14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z <= 14.25))
+        { transform.position += this.transform.rotation * input * moveSpeed * moveMultiplier * Time.fixedDeltaTime; }
     }
 
     private bool IsGrounded()

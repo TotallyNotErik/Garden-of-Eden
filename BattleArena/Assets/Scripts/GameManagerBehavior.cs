@@ -19,6 +19,14 @@ public class GameManagerBehavior : MonoBehaviour
     private int bullets = 8;
     private double loadtime = 0.0;
     private bool pause = false;
+    private float chargecd = 0f;
+    private float cdmultiple = 1f;
+
+    public float cdMultiplier
+    {
+        get { return cdmultiple; }
+        set { cdmultiple = value; }
+    }
 
     public double reloadTime
     {
@@ -30,9 +38,19 @@ public class GameManagerBehavior : MonoBehaviour
         set { loadtime = value; }
     }
 
+    public float chargeTime
+    {
+        get { return 1f; }
+    }
+    public float chargeTimer
+    {
+        get { return chargecd; }
+        set { chargecd = value; }
+    }
+
     public double dashCooldown
     {
-        get { return 5.0; }
+        get { return 3.0; }
     }
 
     public double dashTimer
@@ -146,11 +164,19 @@ public class GameManagerBehavior : MonoBehaviour
             }
             if (YellowArtifact)
             {
-                if (Time.timeAsDouble < dashtime + dashCooldown)
+                if (Time.time < chargeTimer + 3 + chargeTime * cdMultiplier)
                 {
-                    GUI.Box(new Rect(20, 530, 250, 25), "Dash on cooldown for " + (System.Math.Round(dashtime + dashCooldown - Time.timeAsDouble, 2)) + "s");
+                    GUI.Box(new Rect(20, 530, 250, 25), "Bash on cooldown for " + (System.Math.Round(chargeTimer + chargeTime * cdMultiplier - Time.time, 2) + 3) + "s");
                 }
-                else { GUI.Box(new Rect(20, 530, 250, 25), "Press LShift to Dash!"); }
+                else { GUI.Box(new Rect(20, 530, 250, 25), "Hold RClick to charge a Bash!"); }
+            }
+            if (YellowArtifact && RedArtifact && BlueArtifact)
+            {
+                if (Time.time < dashtime + dashCooldown)
+                {
+                    GUI.Box(new Rect(20, 590, 250, 25), "Dash on cooldown for " + (System.Math.Round(dashtime + dashCooldown - Time.timeAsDouble, 2)) + "s");
+                }
+                else { GUI.Box(new Rect(20, 590, 250, 25), "Press LShift to dash through walls!"); }
             }
 
             GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height - 50, 300, 500), labelText);
