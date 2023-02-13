@@ -76,10 +76,10 @@ public class PlayerBehavior : MonoBehaviour
                 gameManager.Magazine = 8;
             }
         }
-
+        _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
 
         camInput = Input.GetAxis("Horizontal") * rotateSpeed;
-        _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
+      
         Vector3 rotation = Vector3.up * camInput;
 
         Quaternion angleRot = Quaternion.Euler(rotation * Time.fixedDeltaTime);

@@ -124,7 +124,7 @@ public class GameManagerBehavior : MonoBehaviour
     {
         if (pause == true)
         {
-            GUI.Box(new Rect(0,0,Screen.width, Screen.height),"Game Paused");
+            GUI.Box(new Rect(0,0,Screen.width, Screen.height)," ");
             GUI.Label(new Rect(Screen.width / 2-25, Screen.height/2, 300, 500), "Game Paused");
         }
         else

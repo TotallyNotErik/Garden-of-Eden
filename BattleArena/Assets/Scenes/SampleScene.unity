@@ -3369,7 +3369,7 @@ MonoBehaviour:
   gameManager: {fileID: 0}
   jumpVelocity: 7
   moveSpeed: 10
-  rotateSpeed: 10
+  rotateSpeed: 2.5
   gravityVel: 9.8
   distanceToGround: 0.1
   bullet: {fileID: 3378504792192950110, guid: 21a1cd70c47d93f4f9d5c3211bef2cb4, type: 3}
