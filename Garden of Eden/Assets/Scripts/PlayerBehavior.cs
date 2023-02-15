@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerBehavior : MonoBehaviour
 {
     public GameManagerBehavior gameManager;
+    public EnemyBehavior enemy;
 
     public float jumpVelocity = 5f;
     public float moveSpeed = 10f;
@@ -27,14 +28,17 @@ public class PlayerBehavior : MonoBehaviour
     private float charge = 0.0f;
     private float maxCharge = 5.0f;
     private bool charging = false;
-
-
+    private bool bashing = false;
+    private float bashStart = 0f;
+    
+    private float timeCharged = 0f;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+        
     }
 
 
@@ -112,27 +116,35 @@ public class PlayerBehavior : MonoBehaviour
 
         }
         else
-       		{
+        {
            	 if (charging && Time.time - charge > maxCharge)
            	 {
-               _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
-               charging = false;
-               gameManager.cdMultiplier = maxCharge;
-               gameManager.chargeTimer = Time.time;
-               charge = Time.time;
-
-            }
-            	else if (charging)
-            	{
-                	_rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge + 1);
-               	 	charging = false;
-                    gameManager.cdMultiplier = (Time.time - charge);
-                    gameManager.chargeTimer = Time.time;
-                    charge = Time.time;
-                 }
-  
-            	moveMultiplier = 1f;
+                  _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
+                  Debug.Log(_rb.velocity.x + "," + _rb.velocity.y + "," + _rb.velocity.z);
+                  charging = false;
+                  gameManager.cdMultiplier = maxCharge;
+                  gameManager.chargeTimer = Time.time;
+                  timeCharged = 5f;
+                  bashing = true;
+                  bashStart = Time.time;
+             }
+             else if (charging)
+             {
+                _rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge + 1);
+                 Debug.Log(_rb.velocity.x + "," + _rb.velocity.y + "," + _rb.velocity.z);
+                charging = false;
+                timeCharged = Time.time - charge;
+                gameManager.cdMultiplier = (Time.time - charge);
+                gameManager.chargeTimer = Time.time;
+                bashing = true;
+                bashStart = Time.time;
+             }
+             moveMultiplier = 1f;
        	}
+        if (bashing == true && Time.time > 0.5 + (bashStart + 0.1 * timeCharged)) 
+        {
+            bashing = false;
+        }
 	
         _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
 
@@ -161,4 +173,27 @@ public class PlayerBehavior : MonoBehaviour
         bool grounded = Physics.CheckCapsule(_col.bounds.center, capsuleBottom, distanceToGround, groundLayer, QueryTriggerInteraction.Ignore);
         return grounded;
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if(other.gameObject.name == "Enemy" || other.gameObject.name == "Enemy(Clone)")
+	    {
+            enemy = other.gameObject.GetComponent<EnemyBehavior>();
+
+		    if (bashing == false) 
+            {
+                gameManager.HP--;
+            }
+            else if (bashing == true)
+            {
+                _rb.velocity = -this.transform.forward * moveSpeed ;
+                enemy.HP--;
+                if (timeCharged >= 2.5)
+                {
+                    enemy.HP--;
+                }
+            }
+	    }
+    }
+   
 }

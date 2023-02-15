@@ -22,6 +22,16 @@ public class GameManagerBehavior : MonoBehaviour
     private float chargecd = 0f;
     private float cdmultiple = 1f;
 
+    private int _enemies = 1;
+
+    public int EnemyCount 
+    {
+        get { return _enemies;}
+        set { _enemies = value;
+        Debug.Log("Enemies:" + _enemies);
+        }
+    }
+
     public float cdMultiplier
     {
         get { return cdmultiple; }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class ArtifactBehavior : MonoBehaviour
 {
     public GameManagerBehavior gameManager;
+    public GameObject Enemy;
 
     void Start()
     {
@@ -20,6 +21,7 @@ public class ArtifactBehavior : MonoBehaviour
             Destroy(this.transform.parent.gameObject);
 
             Debug.Log("You Have Collected the Blue Artifact!");
+            GameObject newEnemy = Instantiate(Enemy,new Vector3(12,1,9),Quaternion.identity) as GameObject;
 
             gameManager.Items += 1;
             gameManager.BlueArtifact = true;
