@@ -26,7 +26,7 @@ public class PlayerBehavior : MonoBehaviour
 
     private float charge = 0.0f;
     private float maxCharge = 5.0f;
-    private bool charging = true;
+    private bool charging = false;
 
 
 
@@ -69,9 +69,13 @@ public class PlayerBehavior : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact && gameManager.RedArtifact && gameManager.BlueArtifact)
         {
-            if ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25 && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown )
+            if (((this.transform.position + this.transform.rotation * input * 5).x < 14.25 && (this.transform.position + this.transform.rotation * input * 5).x > -14.25 && (this.transform.position + this.transform.rotation * input * 5).z < 14.25 && (this.transform.position + this.transform.rotation * input * 5).z > -14.25) && ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
             {
-                this.transform.position += 5 * this.transform.forward;
+                /*this.transform.position += 5 * this.transform.forward;*/
+                if (input == new Vector3(0,0,0)) {
+                    this.transform.position += 5 * this.transform.forward;
+                }
+                this.transform.position += this.transform.rotation * input * 5;
 
                 gameManager.dashTimer = Time.timeAsDouble;
             }
@@ -93,7 +97,10 @@ public class PlayerBehavior : MonoBehaviour
                 gameManager.Magazine = 8;
             }
         }
-	
+	    if (Input.GetKey(KeyCode.R) && gameManager.Magazine != 8 && gameManager.Magazine != 0)
+        {
+            gameManager.Magazine = 0;
+        }
         if (Input.GetMouseButton(1) && gameManager.YellowArtifact && Time.time > 3 + gameManager.chargeTimer + (gameManager.chargeTime * gameManager.cdMultiplier))
         {
 		    if (Input.GetMouseButtonDown(1)) {
@@ -108,16 +115,16 @@ public class PlayerBehavior : MonoBehaviour
        		{
            	 if (charging && Time.time - charge > maxCharge)
            	 {
-                _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
-                charging = false;
-                gameManager.cdMultiplier = maxCharge;
-                gameManager.chargeTimer = Time.time;
-                 charge = Time.time;
+               _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
+               charging = false;
+               gameManager.cdMultiplier = maxCharge;
+               gameManager.chargeTimer = Time.time;
+               charge = Time.time;
 
             }
             	else if (charging)
             	{
-                	_rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge);
+                	_rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge + 1);
                	 	charging = false;
                     gameManager.cdMultiplier = (Time.time - charge);
                     gameManager.chargeTimer = Time.time;
