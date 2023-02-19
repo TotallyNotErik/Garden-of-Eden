@@ -21,10 +21,11 @@ public class EnemyBehavior : MonoBehaviour
             {Debug.Log("Enemy Hp:" + _enemyHP);}
         }
     }
-    void start() 
+    void Start() 
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
-        gameManager.EnemyCount++;
+        //gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
+        gameManager = GameManagerBehavior.instance;
+        gameManager.EnemyCount+= 1;
     }
     void OnCollisionEnter(Collision other)
     {

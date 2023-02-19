@@ -9,6 +9,9 @@ public class GameManagerBehavior : MonoBehaviour
 
     public string labelText = "Collect all the items and win your freedom!";
     public int maxItems = 3;
+    public static GameManagerBehavior instance;
+
+    private bool showLossScreen = false;
 
     private int _itemsCollected = 0;
     private bool Blue = false;
@@ -22,13 +25,14 @@ public class GameManagerBehavior : MonoBehaviour
     private float chargecd = 0f;
     private float cdmultiple = 1f;
 
-    private int _enemies = 1;
+    private int _enemies = 0;
 
     public int EnemyCount 
     {
         get { return _enemies;}
-        set { _enemies = value;
-        Debug.Log("Enemies:" + _enemies);
+        set { 
+            _enemies = value;
+            Debug.Log("Enemies:" + _enemies);
         }
     }
 
@@ -142,6 +146,11 @@ public class GameManagerBehavior : MonoBehaviour
         {
             _playerHP = value;
             Debug.LogFormat("Lives: {0}", _playerHP);
+
+            if(_playerHP <= 0) {
+                showLossScreen = true;
+                Time.timeScale = 0.0f;
+            }
         }
     }
 
@@ -202,7 +211,23 @@ public class GameManagerBehavior : MonoBehaviour
                     Time.timeScale = 1.0f;
                 }
             }
+
+            if (showLossScreen)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "You Kinda Suck at This"))
+                {
+                    SceneManager.LoadScene(0);
+
+                    Time.timeScale = 1.0f;
+                }
+            }
         }
+    }
+    void Awake()
+    {
+        instance = this;
     }
 
     void Start()

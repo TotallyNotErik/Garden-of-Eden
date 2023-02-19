@@ -73,7 +73,7 @@ public class PlayerBehavior : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact && gameManager.RedArtifact && gameManager.BlueArtifact)
         {
-            if (((this.transform.position + this.transform.rotation * input * 5).x < 14.25 && (this.transform.position + this.transform.rotation * input * 5).x > -14.25 && (this.transform.position + this.transform.rotation * input * 5).z < 14.25 && (this.transform.position + this.transform.rotation * input * 5).z > -14.25) && ((this.transform.position + 5 * this.transform.forward).x < 14.25 && (this.transform.position + 5 * this.transform.forward).x > -14.25 && (this.transform.position + 5 * this.transform.forward).z < 14.25 && (this.transform.position + 5 * this.transform.forward).z > -14.25) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
+            if (((this.transform.position + this.transform.rotation * input * 5).x < 28.5 && (this.transform.position + this.transform.rotation * input * 5).x > -28.5 && (this.transform.position + this.transform.rotation * input * 5).z < 28.5 && (this.transform.position + this.transform.rotation * input * 5).z > -28.5) && ((this.transform.position + 5 * this.transform.forward).x < 28.5 && (this.transform.position + 5 * this.transform.forward).x > -28.5 && (this.transform.position + 5 * this.transform.forward).z < 28.5 && (this.transform.position + 5 * this.transform.forward).z > -28.5) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
             {
                 /*this.transform.position += 5 * this.transform.forward;*/
                 if (input == new Vector3(0,0,0)) {
@@ -120,7 +120,6 @@ public class PlayerBehavior : MonoBehaviour
            	 if (charging && Time.time - charge > maxCharge)
            	 {
                   _rb.velocity = this.transform.forward * moveSpeed * maxCharge;
-                  Debug.Log(_rb.velocity.x + "," + _rb.velocity.y + "," + _rb.velocity.z);
                   charging = false;
                   gameManager.cdMultiplier = maxCharge;
                   gameManager.chargeTimer = Time.time;
@@ -131,7 +130,6 @@ public class PlayerBehavior : MonoBehaviour
              else if (charging)
              {
                 _rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge + 1);
-                 Debug.Log(_rb.velocity.x + "," + _rb.velocity.y + "," + _rb.velocity.z);
                 charging = false;
                 timeCharged = Time.time - charge;
                 gameManager.cdMultiplier = (Time.time - charge);
@@ -162,8 +160,10 @@ public class PlayerBehavior : MonoBehaviour
         /*_rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime);
         _rb.MovePosition(this.transform.position + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
         */
-        if (((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x >= -14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x <= 14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z >= -14.25) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z <= 14.25))
-        { transform.position += this.transform.rotation * input * moveSpeed * moveMultiplier * Time.fixedDeltaTime; }
+        if (((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x >= -28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x <= 28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z >= -28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z <= 28.5))
+        { /* transform.position += this.transform.rotation * input * moveSpeed * moveMultiplier * Time.fixedDeltaTime; */
+            _rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * moveMultiplier * Time.fixedDeltaTime + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
+        }
     }
 
     private bool IsGrounded()
@@ -183,10 +183,12 @@ public class PlayerBehavior : MonoBehaviour
 		    if (bashing == false) 
             {
                 gameManager.HP--;
+                _rb.AddForce(other.gameObject.transform.forward * moveSpeed * 0.75f, ForceMode.Impulse);
+                _rb.AddForce(Vector3.up * jumpVelocity * 0.75f, ForceMode.Impulse);
             }
             else if (bashing == true)
             {
-                _rb.velocity = -this.transform.forward * moveSpeed ;
+                _rb.velocity = -this.transform.forward * moveSpeed;
                 enemy.HP--;
                 if (timeCharged >= 2.5)
                 {
