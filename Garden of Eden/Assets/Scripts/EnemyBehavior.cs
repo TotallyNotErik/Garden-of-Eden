@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyBehavior : MonoBehaviour
 {
+
+    public Transform patrolRoute;
+    public List<Transform> locations;
+    public Transform player;
+
+    private int locationIndex = 0;
+    private UnityEngine.AI.NavMeshAgent agent;
+
     public GameManagerBehavior gameManager;
     private int _enemyHP = 10;
     public int HP 
@@ -25,8 +34,54 @@ public class EnemyBehavior : MonoBehaviour
     {
         //gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
         gameManager = GameManagerBehavior.instance;
-        gameManager.EnemyCount+= 1;
+        gameManager.EnemyCount += 1;
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        player = GameObject.Find("Player").transform;
+        InitializePatrolRoute();
+        MoveToNextPatrolLocation();
+
     }
+    void Update()
+    {
+        if (agent.remainingDistance < 0.2f && !agent.pathPending && agent.destination != player.position)
+        {
+            MoveToNextPatrolLocation();
+        }
+    }
+    void InitializePatrolRoute()
+    {
+        foreach (Transform child in patrolRoute)
+        {
+            locations.Add(child);
+        }
+    }
+
+    void MoveToNextPatrolLocation()
+    {
+        if (locations.Count == 0)
+            return;
+        agent.destination = locations[locationIndex].position;
+        locationIndex = (locationIndex + 1) % locations.Count;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            agent.destination = player.position;
+        }
+
+
+    }
+
+void OnTriggerStay(Collider other)
+    {
+        if (other.name == "Player")
+        {
+            agent.destination = player.position;
+        }
+
+    } 
     void OnCollisionEnter(Collision other)
     {
  
@@ -35,19 +90,12 @@ public class EnemyBehavior : MonoBehaviour
             HP--;
         }
     }
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.name == "Player")
-	{
-		/*Debug.Log("They're Stealing the artifacts! Get Them!");*/
-	}
-    }
 
     void OnTriggerExit(Collider other)
     {
         if(other.name == "Player")
 	{
-		/*Debug.Log("Dammit, we lost them.  Stay on the lookout.");*/
-	}
+            MoveToNextPatrolLocation();
+        }
     }
 }

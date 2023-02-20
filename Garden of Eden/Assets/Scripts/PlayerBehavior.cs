@@ -6,7 +6,7 @@ public class PlayerBehavior : MonoBehaviour
 {
     public GameManagerBehavior gameManager;
     public EnemyBehavior enemy;
-
+    public DestroyerBehavior destroyer;
     public float jumpVelocity = 5f;
     public float moveSpeed = 10f;
  	public float rotateSpeed = .25f;
@@ -23,8 +23,16 @@ public class PlayerBehavior : MonoBehaviour
 	private Rigidbody _rb;
     private CapsuleCollider _col;
 
-    private float moveMultiplier = 1f;
-
+//    private float mover = 1f;
+    public float moveMultiplier = 1f;
+   /* {
+        get { return mover; }
+        set { mover = value;
+            Debug.Log("Movement Changed");
+        }
+    }
+ */
+    
     private float charge = 0.0f;
     private float maxCharge = 5.0f;
     private bool charging = false;
@@ -73,7 +81,7 @@ public class PlayerBehavior : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact && gameManager.RedArtifact && gameManager.BlueArtifact)
         {
-            if (((this.transform.position + this.transform.rotation * input * 5).x < 28.5 && (this.transform.position + this.transform.rotation * input * 5).x > -28.5 && (this.transform.position + this.transform.rotation * input * 5).z < 28.5 && (this.transform.position + this.transform.rotation * input * 5).z > -28.5) && ((this.transform.position + 5 * this.transform.forward).x < 28.5 && (this.transform.position + 5 * this.transform.forward).x > -28.5 && (this.transform.position + 5 * this.transform.forward).z < 28.5 && (this.transform.position + 5 * this.transform.forward).z > -28.5) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
+            if (((this.transform.position + this.transform.rotation * input * 5).x < 30 && (this.transform.position + this.transform.rotation * input * 5).x > -30 && (this.transform.position + this.transform.rotation * input * 5).z < 30 && (this.transform.position + this.transform.rotation * input * 5).z > -30) && ((this.transform.position + 5 * this.transform.forward).x < 30 && (this.transform.position + 5 * this.transform.forward).x > -30 && (this.transform.position + 5 * this.transform.forward).z < 30 && (this.transform.position + 5 * this.transform.forward).z > -30) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
             {
                 /*this.transform.position += 5 * this.transform.forward;*/
                 if (input == new Vector3(0,0,0)) {
@@ -126,7 +134,8 @@ public class PlayerBehavior : MonoBehaviour
                   timeCharged = 5f;
                   bashing = true;
                   bashStart = Time.time;
-             }
+                  moveMultiplier = 1f;
+            }
              else if (charging)
              {
                 _rb.velocity = this.transform.forward * moveSpeed * (Time.time - charge + 1);
@@ -136,8 +145,9 @@ public class PlayerBehavior : MonoBehaviour
                 gameManager.chargeTimer = Time.time;
                 bashing = true;
                 bashStart = Time.time;
-             }
-             moveMultiplier = 1f;
+                moveMultiplier = 1f;
+            }
+             
        	}
         if (bashing == true && Time.time > 0.5 + (bashStart + 0.1 * timeCharged)) 
         {
@@ -160,9 +170,9 @@ public class PlayerBehavior : MonoBehaviour
         /*_rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime);
         _rb.MovePosition(this.transform.position + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
         */
-        if (((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x >= -28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x <= 28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z >= -28.5) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z <= 28.5))
+        if (((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x >= -30) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).x <= 30) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z >= -30) && ((transform.position + this.transform.rotation * input * moveSpeed * Time.fixedDeltaTime).z <= 30))
         { /* transform.position += this.transform.rotation * input * moveSpeed * moveMultiplier * Time.fixedDeltaTime; */
-            _rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * moveMultiplier * Time.fixedDeltaTime + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
+            _rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * moveMultiplier * Time.fixedDeltaTime + input.x * this.transform.right * moveSpeed * moveMultiplier * Time.fixedDeltaTime);
         }
     }
 
@@ -176,9 +186,12 @@ public class PlayerBehavior : MonoBehaviour
 
     void OnCollisionEnter(Collision other)
     {
-        if(other.gameObject.name == "Enemy" || other.gameObject.name == "Enemy(Clone)")
+        if(other.gameObject.name == "Enemy" || other.gameObject.name == "Enemy(Clone)" || other.gameObject.name == "Destroyer(Clone)")
 	    {
-            enemy = other.gameObject.GetComponent<EnemyBehavior>();
+            if(other.gameObject.name == "Destroyer(Clone)")
+                destroyer = other.gameObject.GetComponent<DestroyerBehavior>();
+            else
+                enemy = other.gameObject.GetComponent<EnemyBehavior>();
 
 		    if (bashing == false) 
             {
@@ -189,10 +202,19 @@ public class PlayerBehavior : MonoBehaviour
             else if (bashing == true)
             {
                 _rb.velocity = -this.transform.forward * moveSpeed;
-                enemy.HP--;
+                other.gameObject.GetComponent<Rigidbody>().AddForce(this.transform.forward * moveSpeed);
+
+                if (other.gameObject.name == "Destroyer(Clone)")
+                    destroyer.HP--;
+                else
+                    enemy.HP--;
                 if (timeCharged >= 2.5)
                 {
-                    enemy.HP--;
+
+                    if (other.gameObject.name == "Destroyer(Clone)")
+                        destroyer.HP--;
+                    else
+                        enemy.HP--;
                 }
             }
 	    }
