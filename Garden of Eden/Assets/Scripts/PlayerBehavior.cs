@@ -98,7 +98,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && gameManager.Magazine > 0)
             {
-                GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(1, 0, 0), this.transform.rotation) as GameObject;
+                GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(0.5f, 0, 0), this.transform.rotation) as GameObject;
                 Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
                 bulletRB.velocity = this.transform.forward * bulletSpeed;
                 gameManager.Magazine--;
@@ -167,6 +167,8 @@ public class PlayerBehavior : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (this.transform.position.y <= -5)
+            this.transform.position = new Vector3(0, 4, 0);
         /*_rb.MovePosition(this.transform.position + input.z * this.transform.forward * moveSpeed * Time.fixedDeltaTime);
         _rb.MovePosition(this.transform.position + input.x * this.transform.right * moveSpeed * Time.fixedDeltaTime);
         */
