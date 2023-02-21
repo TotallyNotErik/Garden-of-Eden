@@ -12,6 +12,9 @@ public class PlayerBehavior : MonoBehaviour
  	public float rotateSpeed = .25f;
     public float gravityVel = 9.8f;
     public float distanceToGround = 0.1f;
+    public GameObject barrier;
+
+    public bool swimming = false;
 
     public GameObject bullet;
     public float bulletSpeed = 100f;
@@ -38,55 +41,65 @@ public class PlayerBehavior : MonoBehaviour
     private bool charging = false;
     private bool bashing = false;
     private float bashStart = 0f;
-    
     private float timeCharged = 0f;
+
+    private bool counter = false;
+    private float counterDuration = 0.1f;
+
+    private float counterboostDur = 3f;
+    private float counterboosttime = 0.0f;
+    
+
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
-        
+        barrier = GameObject.Find("Barrier");
+        barrier.SetActive(false);
     }
 
 
     void Update()
     {
         if (Input.GetKey(KeyCode.W))
-        {
-            input.z = 1f;
-
-        }
+        { input.z = 1f; }
         else if (Input.GetKey(KeyCode.S))
-        {
-            input.z = -1f;
-
-        }
-        else { input.z = 0f;}
+           { input.z = -1f; }
+        else { input.z = 0f; }
 
         if (Input.GetKey(KeyCode.A))
-        {
-            input.x = -0.75f;
-        }
+        { input.x = -0.75f; }
         else if (Input.GetKey(KeyCode.D))
-        {
-            input.x = 0.75f;
-        }
+        { input.x = 0.75f; }
         else { input.x = 0f; }
 
-        if (Input.GetKeyDown(KeyCode.Space) && gameManager.BlueArtifact && IsGrounded())
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        { _rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse); }
+
+        if (Input.GetKey(KeyCode.E) && gameManager.BlueArtifact && Time.time >= gameManager.counterCD + gameManager.countertime && charging == false && bashing == false)
         {
-            _rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse);
+            counter = true;
+            gameManager.countertime = Time.time;
+            barrier.SetActive(true);
         }
+        else if (Time.time >= gameManager.countertime + counterDuration)
+        {
+            counter = false;
+            barrier.SetActive(false);
+        }
+
+        if (!charging && Time.time > counterboosttime + counterboostDur && !swimming)
+            moveMultiplier = 1f;
 
         if (Input.GetKeyDown(KeyCode.LeftShift) && gameManager.YellowArtifact && gameManager.RedArtifact && gameManager.BlueArtifact)
         {
             if (((this.transform.position + this.transform.rotation * input * 5).x < 30 && (this.transform.position + this.transform.rotation * input * 5).x > -30 && (this.transform.position + this.transform.rotation * input * 5).z < 30 && (this.transform.position + this.transform.rotation * input * 5).z > -30) && ((this.transform.position + 5 * this.transform.forward).x < 30 && (this.transform.position + 5 * this.transform.forward).x > -30 && (this.transform.position + 5 * this.transform.forward).z < 30 && (this.transform.position + 5 * this.transform.forward).z > -30) && Time.timeAsDouble > gameManager.dashTimer + gameManager.dashCooldown)
             {
                 /*this.transform.position += 5 * this.transform.forward;*/
-                if (input == new Vector3(0,0,0)) {
+                if (input == new Vector3(0,0,0))
                     this.transform.position += 5 * this.transform.forward;
-                }
                 this.transform.position += this.transform.rotation * input * 5;
 
                 gameManager.dashTimer = Time.timeAsDouble;
@@ -105,9 +118,7 @@ public class PlayerBehavior : MonoBehaviour
             }
 
             if (Time.timeAsDouble >= gameManager.reloadTimer + gameManager.reloadTime && gameManager.Magazine == 0)
-            {
                 gameManager.Magazine = 8;
-            }
         }
 	    if (Input.GetKey(KeyCode.R) && gameManager.Magazine != 8 && gameManager.Magazine != 0)
         {
@@ -195,7 +206,7 @@ public class PlayerBehavior : MonoBehaviour
             else
                 enemy = other.gameObject.GetComponent<EnemyBehavior>();
 
-		    if (bashing == false) 
+            if (bashing == false && counter == false) 
             {
                 gameManager.HP--;
                 if (other.gameObject.name == "Destroyer(Clone)")
@@ -206,6 +217,17 @@ public class PlayerBehavior : MonoBehaviour
                     _rb.AddForce(other.gameObject.transform.forward * moveSpeed * 0.75f, ForceMode.Impulse);
                     _rb.AddForce(Vector3.up * jumpVelocity * 0.75f, ForceMode.Impulse);
                 }
+            }
+            else if(counter == true)
+            {
+                gameManager.HP+=2;
+                if (other.gameObject.name == "Destroyer(Clone)")
+                    destroyer.HP-=2 ;
+                else
+                    enemy.HP-= 2;
+                //gameManager.countertime -= (gameManager.counterCD / 2);
+                moveMultiplier = 1.5f;
+                counterboosttime = Time.time;
             }
             else if (bashing == true)
             {

@@ -17,6 +17,7 @@ public class WaterBehavior : MonoBehaviour
         {
             player = GameObject.Find("Player").GetComponent<PlayerBehavior>();
             player.moveMultiplier = 0.5f;
+            player.swimming = true;
         }
     }
 
@@ -26,6 +27,7 @@ public class WaterBehavior : MonoBehaviour
         {
             player = GameObject.Find("Player").GetComponent<PlayerBehavior>();
             player.moveMultiplier = 1f;
+            player.swimming = false;
         }
     }
 }

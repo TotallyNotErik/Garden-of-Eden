@@ -25,6 +25,8 @@ public class GameManagerBehavior : MonoBehaviour
     private bool pause = false;
     private float chargecd = 0f;
     private float cdmultiple = 1f;
+    public float counterCD = 5f;
+    public float countertime = 0.0f;
 
     private int _enemies = 0;
 
@@ -180,7 +182,10 @@ public class GameManagerBehavior : MonoBehaviour
             }
             if (BlueArtifact)
             {
-                GUI.Box(new Rect(20, 560, 250, 25), "Press Spacebar to Jump!");
+                if (Time.time < countertime + counterCD)
+                    GUI.Box(new Rect(20, 560, 250, 25), "Parry on cooldown for " + (System.Math.Round(counterCD + countertime - Time.time, 2)) + "s");
+                else
+                    GUI.Box(new Rect(20, 560, 250, 25), "Press E to Parry an Attack!");
             }
             if (YellowArtifact)
             {
