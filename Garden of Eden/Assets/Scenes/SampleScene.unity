@@ -8087,6 +8087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  Destroyer: {fileID: 3640905657005859451, guid: a30625499a1387245ac1d3e29d58173a, type: 3}
 --- !u!1 &1039107742
 GameObject:
   m_ObjectHideFlags: 0
@@ -9252,6 +9253,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8251206541986637504, guid: a06d121d963655e41b2c2d2047ce01a5, type: 3}
+      propertyPath: Destroyer
+      value: 
+      objectReference: {fileID: 3640905657005859451, guid: a30625499a1387245ac1d3e29d58173a, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a06d121d963655e41b2c2d2047ce01a5, type: 3}
 --- !u!1 &1322187115

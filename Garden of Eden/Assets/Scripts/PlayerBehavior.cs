@@ -196,6 +196,8 @@ public class PlayerBehavior : MonoBehaviour
 		    if (bashing == false) 
             {
                 gameManager.HP--;
+                if (other.gameObject.name == "Destroyer(Clone)")
+                    gameManager.HP--;
 
                 if (!charging)
                 {
