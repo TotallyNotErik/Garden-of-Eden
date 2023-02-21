@@ -242,7 +242,7 @@ public class GameManagerBehavior : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Escape) && showWinScreen == false)
+        if (Input.GetKey(KeyCode.Tab) && showWinScreen == false)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
