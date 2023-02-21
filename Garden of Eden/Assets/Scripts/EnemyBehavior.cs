@@ -21,13 +21,14 @@ public class EnemyBehavior : MonoBehaviour
         set 
         {
             _enemyHP = value;
+
             if(_enemyHP <=0) 
-            {Destroy(this.gameObject);
-            Debug.Log("Enemy Defeated!");
-            gameManager.EnemyCount--;
+            {
+                Destroy(this.gameObject);
+                Debug.Log("Enemy Defeated!");
+                gameManager.EnemyCount--;
             }
-            else
-            {Debug.Log("Enemy Hp:" + _enemyHP);}
+
         }
     }
     void Start() 
@@ -43,7 +44,7 @@ public class EnemyBehavior : MonoBehaviour
     }
     void Update()
     {
-        if (agent.remainingDistance < 0.2f && !agent.pathPending && agent.destination != player.position)
+        if (agent.remainingDistance < 0.5f && !agent.pathPending && agent.destination != player.position)
         {
             MoveToNextPatrolLocation();
         }
@@ -68,7 +69,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         if (other.name == "Player")
         {
-            agent.destination = player.position;
+            
         }
 
 

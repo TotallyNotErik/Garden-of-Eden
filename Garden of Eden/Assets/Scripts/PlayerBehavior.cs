@@ -156,7 +156,7 @@ public class PlayerBehavior : MonoBehaviour
 	
         _rb.AddForce(-Vector3.up * gravityVel * Time.deltaTime, ForceMode.Impulse);
 
-        camInput = Input.GetAxis("Horizontal") * rotateSpeed;
+        camInput = Input.GetAxis("Horizontal") * gameManager.sensitivity *rotateSpeed;
       
         Vector3 rotation = Vector3.up * camInput;
 
@@ -196,13 +196,17 @@ public class PlayerBehavior : MonoBehaviour
 		    if (bashing == false) 
             {
                 gameManager.HP--;
-                _rb.AddForce(other.gameObject.transform.forward * moveSpeed * 0.75f, ForceMode.Impulse);
-                _rb.AddForce(Vector3.up * jumpVelocity * 0.75f, ForceMode.Impulse);
+
+                if (!charging)
+                {
+                    _rb.AddForce(other.gameObject.transform.forward * moveSpeed * 0.75f, ForceMode.Impulse);
+                    _rb.AddForce(Vector3.up * jumpVelocity * 0.75f, ForceMode.Impulse);
+                }
             }
             else if (bashing == true)
             {
                 _rb.velocity = -this.transform.forward * moveSpeed;
-                other.gameObject.GetComponent<Rigidbody>().AddForce(this.transform.forward * moveSpeed);
+//                other.gameObject.GetComponent<Rigidbody>().AddForce(this.transform.forward * moveSpeed);
 
                 if (other.gameObject.name == "Destroyer(Clone)")
                     destroyer.HP--;

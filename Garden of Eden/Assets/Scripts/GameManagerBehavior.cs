@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManagerBehavior : MonoBehaviour
 {
-
-
     public string labelText = "Collect all the items and win your freedom!";
     public int maxItems = 3;
     public static GameManagerBehavior instance;
 
+    public GameObject pausescreen;
+    public float sensitivity = 1f;
     private bool showLossScreen = false;
 
     private int _itemsCollected = 0;
@@ -161,9 +162,9 @@ public class GameManagerBehavior : MonoBehaviour
     {
         if (pause == true)
         {
-            GUI.Box(new Rect(0,0,Screen.width, Screen.height)," ");
-            GUI.Label(new Rect(Screen.width / 2-25, Screen.height/2, 300, 500), "Game Paused");
-        }
+            /* GUI.Box(new Rect(0,0,Screen.width, Screen.height)," ");
+            GUI.Label(new Rect(Screen.width / 2-25, Screen.height/2, 300, 500), "Game Paused"); */
+        } 
         else
         {
             GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + _playerHP);
@@ -232,28 +233,46 @@ public class GameManagerBehavior : MonoBehaviour
 
     void Start()
     {
+        pausescreen = GameObject.Find("PauseMenu");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        pausescreen.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Tab) && showWinScreen == false)
+        if (Input.GetKey(KeyCode.Escape) && showWinScreen == false)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             Time.timeScale = 0f;
             pause = true;
+            pausescreen.SetActive(true);
         }
+    }
 
-        if (Input.GetMouseButtonDown(0) && showWinScreen == false)
+    public void returnbutton()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        Time.timeScale = 1.0f;
+        pause = false;
+        pausescreen.SetActive(false);
+    }
+
+    public void senschange(TMP_InputField playertextinput)
+    {
+        float i = 1;
+        bool test = float.TryParse(playertextinput.text, out i);
+
+        if (test)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            Time.timeScale = 1.0f;
-            pause = false;
-
+            sensitivity = i;
+        }
+        else
+        {
+            return;
         }
 
     }
