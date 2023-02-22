@@ -6,30 +6,43 @@ using TMPro;
 
 public class GameManagerBehavior : MonoBehaviour
 {
+
+    // For UI ========================================================================================
+    public GameObject holybeam;
+    public GameObject pausescreen;
+    public GameObject winscreen;
+    public GameObject lossscreen;
+    public GameObject winscreenclose;
+    public GameObject winscreeneasy;
+    public GameObject winscreennorm;
     public string labelText = "Collect all the items and win your freedom!";
-    public int maxItems = 3;
+    private bool pause = false;
+    private bool showLossScreen = false;
+    public float sensitivity = 1f;
+
     public static GameManagerBehavior instance;
 
-    public GameObject pausescreen;
-    public float sensitivity = 1f;
-    private bool showLossScreen = false;
-
     private int _itemsCollected = 0;
+    public int maxItems = 3;
     private bool Blue = false;
     private bool Yellow = false;
     private bool Red = false;
     private bool win = false;
+    private bool allitems = false;
+
     private double dashtime = 0.0;
+
     private int bullets = 8;
     private double loadtime = 0.0;
-    private bool pause = false;
+
+
     private float chargecd = 0f;
     private float cdmultiple = 1f;
+
     public float counterCD = 5f;
     public float countertime = 0.0f;
 
     private int _enemies = 0;
-
     public int EnemyCount 
     {
         get { return _enemies;}
@@ -106,6 +119,7 @@ public class GameManagerBehavior : MonoBehaviour
             if (_itemsCollected >= maxItems)
             {
                 labelText = "You've found all the Artifacts! Return to the start to escape!";
+                allitems = true;
             }
             else
             {
@@ -167,6 +181,27 @@ public class GameManagerBehavior : MonoBehaviour
             /* GUI.Box(new Rect(0,0,Screen.width, Screen.height)," ");
             GUI.Label(new Rect(Screen.width / 2-25, Screen.height/2, 300, 500), "Game Paused"); */
         } 
+        else if (showWinScreen)
+        {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                winscreen.SetActive(true);
+                winscreenclose.SetActive(false);
+                winscreennorm.SetActive(false);
+                winscreeneasy.SetActive(false);
+                if(HP <=5)
+                    winscreenclose.SetActive(true);
+                else if(HP <= 14)
+                    winscreennorm.SetActive(true);
+                else
+                    winscreeneasy.SetActive(true);
+        }
+        else if (showLossScreen)
+        {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                lossscreen.SetActive(true);
+        }
         else
         {
             GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + _playerHP);
@@ -205,31 +240,14 @@ public class GameManagerBehavior : MonoBehaviour
             }
 
             GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height - 50, 300, 500), labelText);
-
-            if (showWinScreen)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "YOU WON!"))
-                {
-                    SceneManager.LoadScene(0);
-
-                    Time.timeScale = 1.0f;
-                }
-            }
-
-            if (showLossScreen)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                if (GUI.Button(new Rect(Screen.width / 2 - 100, Screen.height / 2 - 50, 200, 100), "You Kinda Suck at This"))
-                {
-                    SceneManager.LoadScene(0);
-
-                    Time.timeScale = 1.0f;
-                }
-            }
         }
+    }
+
+    public void restart() 
+    {
+        SceneManager.LoadScene(0);
+
+        Time.timeScale = 1.0f;
     }
     void Awake()
     {
@@ -239,15 +257,24 @@ public class GameManagerBehavior : MonoBehaviour
     void Start()
     {
         pausescreen = GameObject.Find("PauseMenu");
+        holybeam = GameObject.Find("Holy Beam");
+        winscreen = GameObject.Find("WinScreen");
+        lossscreen = GameObject.Find("LossScreen");
+        winscreenclose = GameObject.Find("CloseText");
+        winscreennorm = GameObject.Find("NormText");
+        winscreeneasy = GameObject.Find("EasyText");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         pausescreen.SetActive(false);
+        holybeam.SetActive(false);
+        winscreen.SetActive(false);
+        lossscreen.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.Tab) && showWinScreen == false)
+        if (Input.GetKey(KeyCode.Tab) && !showWinScreen && !showLossScreen)
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -255,6 +282,10 @@ public class GameManagerBehavior : MonoBehaviour
             pause = true;
             pausescreen.SetActive(true);
         }
+
+        if(allitems && EnemyCount == 0)
+            holybeam.SetActive(true);
+            
     }
 
     public void returnbutton()
