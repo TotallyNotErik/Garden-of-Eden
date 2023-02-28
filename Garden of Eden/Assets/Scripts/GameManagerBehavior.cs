@@ -191,7 +191,7 @@ public class GameManagerBehavior : MonoBehaviour
                 winscreeneasy.SetActive(false);
                 if(HP <=5)
                     winscreenclose.SetActive(true);
-                else if(HP <= 14)
+                else if(HP <= 14  && HP > 5)
                     winscreennorm.SetActive(true);
                 else if (HP >= 15)
                     winscreeneasy.SetActive(true);
