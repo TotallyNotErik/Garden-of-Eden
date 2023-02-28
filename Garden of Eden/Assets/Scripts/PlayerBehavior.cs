@@ -13,6 +13,7 @@ public class PlayerBehavior : MonoBehaviour
     public float gravityVel = 9.8f;
     public float distanceToGround = 0.1f;
     public GameObject barrier;
+    public GameObject Camera;
 
     public bool swimming = false;
 
@@ -58,6 +59,7 @@ public class PlayerBehavior : MonoBehaviour
         gameManager = GameObject.Find("GameManager").GetComponent<GameManagerBehavior>();
         barrier = GameObject.Find("Barrier");
         barrier.SetActive(false);
+        Camera = GameObject.Find("Main Camera");
     }
 
 
@@ -113,7 +115,7 @@ public class PlayerBehavior : MonoBehaviour
             {
                 GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(0.6f, 0, 0), this.transform.rotation) as GameObject;
                 Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
-                bulletRB.velocity = this.transform.forward * bulletSpeed;
+                bulletRB.velocity =  Camera.transform.forward * bulletSpeed + Vector3.up * .025f * bulletSpeed;
                 gameManager.Magazine--;
             }
 
