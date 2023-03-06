@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
 
 public class GameManagerBehavior : MonoBehaviour
@@ -17,8 +18,10 @@ public class GameManagerBehavior : MonoBehaviour
     public GameObject winscreennorm;
     public GameObject minimap;
     public GameObject fullmap;
+    public GameObject magtext;
+    public TextMeshProUGUI BulletsText;
 
-    public string labelText = "Collect all the items and win your freedom!";
+
     private bool pause = false;
     private bool showLossScreen = false;
     public float sensitivity = 1f;
@@ -118,16 +121,6 @@ public class GameManagerBehavior : MonoBehaviour
         {
             _itemsCollected = value;
             Debug.LogFormat("Items: {0}", _itemsCollected);
-
-            if (_itemsCollected >= maxItems)
-            {
-                labelText = "You've found all the Artifacts! Return to the start to escape!";
-                allitems = true;
-            }
-            else
-            {
-                labelText = "Artifacts Found, only " + (maxItems - _itemsCollected) + " more to go!";
-            }
         }
     }
 
@@ -137,6 +130,7 @@ public class GameManagerBehavior : MonoBehaviour
         set
         {
             Red = value;
+            magtext.SetActive(true);
         }
     }
 
@@ -233,10 +227,9 @@ public class GameManagerBehavior : MonoBehaviour
             if (RedArtifact)
             {
                 if (bullets == 0)
-                {
-                    GUI.Box(new Rect(20, 500, 250, 25), "Reloading...");
-                }
-                else { GUI.Box(new Rect(20, 500, 250, 25), "Left Click to Shoot! (" + bullets + "/8)"); }
+                    BulletsText.text = "X";
+                else
+                    BulletsText.text = bullets.ToString();
             }
             if (BlueArtifact)
             {
@@ -262,7 +255,6 @@ public class GameManagerBehavior : MonoBehaviour
                 else { GUI.Box(new Rect(20, 590, 250, 25), "Press LShift to dash through walls!"); }
             }
 
-            GUI.Label(new Rect(Screen.width / 2 - 100, Screen.height - 50, 300, 500), labelText);
         }
     }
 
@@ -287,6 +279,7 @@ public class GameManagerBehavior : MonoBehaviour
         winscreeneasy = GameObject.Find("WinScreenEasy");
         minimap = GameObject.Find("MiniMap");
         fullmap = GameObject.Find("Full Map");
+        magtext = GameObject.Find("MagText");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         pausescreen.SetActive(false);
@@ -296,6 +289,7 @@ public class GameManagerBehavior : MonoBehaviour
         winscreeneasy.SetActive(false);
         lossscreen.SetActive(false);
         fullmap.SetActive(false);
+        magtext.SetActive(false);
     }
 
     // Update is called once per frame
@@ -339,9 +333,9 @@ public class GameManagerBehavior : MonoBehaviour
     public void SleaseMode()
     {
          _playerHP = 10000;
-         Red = true;
-         Blue = true;
-        Yellow = true;
+         RedArtifact = true;
+         BlueArtifact = true;
+        YellowArtifact = true;
     }
 
     public void senschange(TMP_InputField playertextinput)
