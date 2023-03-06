@@ -20,7 +20,7 @@ public class BirdScript : MonoBehaviour
     void Update()
     {
         if (scared)
-            this.transform.position += this.transform.rotation * new Vector3(0, 2, 1) * Time.deltaTime;
+            this.transform.position += this.transform.rotation * new Vector3(0, 20, 15) * Time.deltaTime;
         else
             this.transform.LookAt(target);
 

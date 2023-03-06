@@ -33,7 +33,6 @@ public class GameManagerBehavior : MonoBehaviour
     private bool Red = false;
     private bool win = false;
     private bool allitems = false;
-
     private double dashtime = 0.0;
 
     private int bullets = 8;
@@ -328,6 +327,14 @@ public class GameManagerBehavior : MonoBehaviour
         Time.timeScale = 1.0f;
         pause = false;
         pausescreen.SetActive(false);
+    }
+
+    public void SleaseMode()
+    {
+         _playerHP = 10000;
+         Red = true;
+         Blue = true;
+        Yellow = true;
     }
 
     public void senschange(TMP_InputField playertextinput)
