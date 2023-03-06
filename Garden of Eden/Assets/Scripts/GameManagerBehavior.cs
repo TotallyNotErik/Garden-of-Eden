@@ -15,6 +15,9 @@ public class GameManagerBehavior : MonoBehaviour
     public GameObject winscreenclose;
     public GameObject winscreeneasy;
     public GameObject winscreennorm;
+    public GameObject minimap;
+    public GameObject fullmap;
+
     public string labelText = "Collect all the items and win your freedom!";
     private bool pause = false;
     private bool showLossScreen = false;
@@ -22,6 +25,7 @@ public class GameManagerBehavior : MonoBehaviour
 
     public static GameManagerBehavior instance;
 
+    private int maptog = 1;
     private int _itemsCollected = 0;
     public int maxItems = 3;
     private bool Blue = false;
@@ -176,6 +180,20 @@ public class GameManagerBehavior : MonoBehaviour
 
     void OnGUI()
     {
+        if (maptog%2 == 0 && !pause)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            minimap.SetActive(false);
+            fullmap.SetActive(true);
+        }
+        else if (!pause)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            fullmap.SetActive(false);
+            minimap.SetActive(true);
+        }
         if (pause == true)
         {
             /* GUI.Box(new Rect(0,0,Screen.width, Screen.height)," ");
@@ -263,17 +281,23 @@ public class GameManagerBehavior : MonoBehaviour
         winscreenclose = GameObject.Find("CloseText");
         winscreennorm = GameObject.Find("NormText");
         winscreeneasy = GameObject.Find("EasyText");
+        minimap = GameObject.Find("MiniMap");
+        fullmap = GameObject.Find("Full Map");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         pausescreen.SetActive(false);
         holybeam.SetActive(false);
         winscreen.SetActive(false);
         lossscreen.SetActive(false);
+        fullmap.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.M) && !showWinScreen && !showLossScreen)
+            maptog++;
+
         if (Input.GetKey(KeyCode.Tab) && !showWinScreen && !showLossScreen)
         {
             Cursor.lockState = CursorLockMode.None;
@@ -286,6 +310,15 @@ public class GameManagerBehavior : MonoBehaviour
         if(allitems && EnemyCount == 0)
             holybeam.SetActive(true);
             
+    }
+
+    public void exitmap()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        fullmap.SetActive(false);
+        minimap.SetActive(true);
+        maptog++;
     }
 
     public void returnbutton()

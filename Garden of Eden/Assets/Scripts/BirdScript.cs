@@ -17,14 +17,14 @@ public class BirdScript : MonoBehaviour
         pos = this.transform.position;
     }
 
-    void LateUpdate()
+    void Update()
     {
         if (scared)
-            this.transform.position += this.transform.rotation * new Vector3(0, 2, 1) * Time.fixedDeltaTime;
+            this.transform.position += this.transform.rotation * new Vector3(0, 2, 1) * Time.deltaTime;
         else
             this.transform.LookAt(target);
 
-        if (Time.time > birdtimer + birdreturn && scared) 
+        if (Time.time > birdtimer + birdreturn && scared)
         {
             GameObject newbird = Instantiate(bird, pos, this.transform.rotation) as GameObject;
             Destroy(gameObject);
