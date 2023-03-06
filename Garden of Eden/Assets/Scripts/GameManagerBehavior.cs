@@ -200,18 +200,24 @@ public class GameManagerBehavior : MonoBehaviour
         } 
         else if (showWinScreen)
         {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                winscreen.SetActive(true);
-                winscreenclose.SetActive(false);
-                winscreennorm.SetActive(false);
-                winscreeneasy.SetActive(false);
-                if(HP <=5)
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+                if(_playerHP <=5)
+                {
                     winscreenclose.SetActive(true);
-                else if(HP <= 14  && HP > 5)
-                    winscreennorm.SetActive(true);
-                else if (HP >= 15)
-                    winscreeneasy.SetActive(true);
+                }
+  
+                if(_playerHP <= 14  && HP > 5)
+                {
+                winscreennorm.SetActive(true);
+                }
+
+                if (_playerHP >= 15)
+                {
+                winscreeneasy.SetActive(true);
+                }
+
         }
         else if (showLossScreen)
         {
@@ -275,18 +281,19 @@ public class GameManagerBehavior : MonoBehaviour
     {
         pausescreen = GameObject.Find("PauseMenu");
         holybeam = GameObject.Find("Holy Beam");
-        winscreen = GameObject.Find("WinScreen");
         lossscreen = GameObject.Find("LossScreen");
-        winscreenclose = GameObject.Find("CloseText");
-        winscreennorm = GameObject.Find("NormText");
-        winscreeneasy = GameObject.Find("EasyText");
+        winscreenclose = GameObject.Find("WinScreenClose");
+        winscreennorm = GameObject.Find("WinScreenNorm");
+        winscreeneasy = GameObject.Find("WinScreenEasy");
         minimap = GameObject.Find("MiniMap");
         fullmap = GameObject.Find("Full Map");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         pausescreen.SetActive(false);
         holybeam.SetActive(false);
-        winscreen.SetActive(false);
+        winscreenclose.SetActive(false);
+        winscreennorm.SetActive(false);
+        winscreeneasy.SetActive(false);
         lossscreen.SetActive(false);
         fullmap.SetActive(false);
     }
