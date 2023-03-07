@@ -19,8 +19,11 @@ public class GameManagerBehavior : MonoBehaviour
     public GameObject minimap;
     public GameObject fullmap;
     public GameObject magtext;
+    public GameObject dashUI;
+    public GameObject bashUi;
+    public GameObject ParryUI;
     public TextMeshProUGUI BulletsText;
-
+    public GameObject hpUI;
 
     private bool pause = false;
     private bool showLossScreen = false;
@@ -140,6 +143,7 @@ public class GameManagerBehavior : MonoBehaviour
         set
         {
             Blue = value;
+            ParryUI.SetActive(true);
         }
     }
 
@@ -149,6 +153,7 @@ public class GameManagerBehavior : MonoBehaviour
         set
         {
             Yellow = value;
+            bashUi.SetActive(true);
         }
     }
     private int _playerHP = 10;
@@ -161,7 +166,27 @@ public class GameManagerBehavior : MonoBehaviour
             _playerHP = value;
             Debug.LogFormat("Lives: {0}", _playerHP);
 
-            if(_playerHP <= 0) {
+           /* if (_playerHP >= 30)
+                hpUI.transform.GetChild(3).gameObject.GetComponent<Image>().fillAmount = 1f;
+            else if(_playerHP >= 20 && _playerHP < 30)*/
+                hpUI.transform.GetChild(3).gameObject.GetComponent<Image>().fillAmount = ((float)_playerHP - 20f) / 10f;
+
+           /* if (_playerHP >= 20)
+                hpUI.transform.GetChild(2).gameObject.GetComponent<Image>().fillAmount = 1f;
+            else if (_playerHP >= 10 && _playerHP < 20)*/
+                hpUI.transform.GetChild(2).gameObject.GetComponent<Image>().fillAmount = ((float)_playerHP - 10f) / 10f;
+
+           /* if (_playerHP >= 10)
+                hpUI.transform.GetChild(1).gameObject.GetComponent<Image>().fillAmount = 1f;
+            else if (_playerHP >= 0 && _playerHP < 10) */
+                hpUI.transform.GetChild(1).gameObject.GetComponent<Image>().fillAmount = (float)_playerHP / 10f;
+
+            if (_playerHP < 5)
+                hpUI.transform.GetChild(1).gameObject.GetComponent<Image>().color = new Color(0.8980393f, 0.254902f, 0.145098f, 1);
+            else
+                hpUI.transform.GetChild(1).gameObject.GetComponent<Image>().color = new Color(0, 1, 1, 1);
+
+            if (_playerHP <= 0) {
                 showLossScreen = true;
                 Time.timeScale = 0.0f;
             }
@@ -221,9 +246,7 @@ public class GameManagerBehavior : MonoBehaviour
         }
         else
         {
-            GUI.Box(new Rect(20, 20, 150, 25), "Player Health:" + _playerHP);
 
-            GUI.Box(new Rect(20, 50, 150, 25), "Items Collected:" + _itemsCollected);
             if (RedArtifact)
             {
                 if (bullets == 0)
@@ -234,25 +257,33 @@ public class GameManagerBehavior : MonoBehaviour
             if (BlueArtifact)
             {
                 if (Time.time < countertime + counterCD)
-                    GUI.Box(new Rect(20, 560, 250, 25), "Parry on cooldown for " + (System.Math.Round(counterCD + countertime - Time.time, 2)) + "s");
+                {
+                    ParryUI.transform.GetChild(0).gameObject.SetActive(true);
+                    ParryUI.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - countertime) / counterCD);
+                }
                 else
-                    GUI.Box(new Rect(20, 560, 250, 25), "Press E to Parry an Attack!");
+                    ParryUI.transform.GetChild(0).gameObject.SetActive(false);
             }
             if (YellowArtifact)
             {
                 if (Time.time < chargeTimer + 3 + chargeTime * cdMultiplier)
                 {
-                    GUI.Box(new Rect(20, 530, 250, 25), "Bash on cooldown for " + (System.Math.Round(chargeTimer + chargeTime * cdMultiplier - Time.time, 2) + 3) + "s");
+                    bashUi.transform.GetChild(0).gameObject.SetActive(true);
+                    bashUi.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - chargeTimer) / (3 + chargeTime * cdMultiplier));
                 }
-                else { GUI.Box(new Rect(20, 530, 250, 25), "Hold RClick to charge a Bash!"); }
+                else
+                    bashUi.transform.GetChild(0).gameObject.SetActive(false);
             }
             if (YellowArtifact && RedArtifact && BlueArtifact)
             {
+                dashUI.SetActive(true);
+
                 if (Time.time < dashtime + dashCooldown)
                 {
-                    GUI.Box(new Rect(20, 590, 250, 25), "Dash on cooldown for " + (System.Math.Round(dashtime + dashCooldown - Time.timeAsDouble, 2)) + "s");
+                    dashUI.transform.GetChild(1).gameObject.SetActive(true);
+                    dashUI.transform.GetChild(1).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - (float)dashtime) / (float)dashCooldown);
                 }
-                else { GUI.Box(new Rect(20, 590, 250, 25), "Press LShift to dash through walls!"); }
+                else { dashUI.transform.GetChild(1).gameObject.SetActive(false); }
             }
 
         }
@@ -280,6 +311,10 @@ public class GameManagerBehavior : MonoBehaviour
         minimap = GameObject.Find("MiniMap");
         fullmap = GameObject.Find("Full Map");
         magtext = GameObject.Find("MagText");
+        dashUI = GameObject.Find("Blink");
+        bashUi = GameObject.Find("Bash");
+        ParryUI = GameObject.Find("Parry");
+        hpUI = GameObject.Find("HealthBar");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         pausescreen.SetActive(false);
@@ -290,6 +325,9 @@ public class GameManagerBehavior : MonoBehaviour
         lossscreen.SetActive(false);
         fullmap.SetActive(false);
         magtext.SetActive(false);
+        dashUI.SetActive(false);
+        bashUi.SetActive(false);
+        ParryUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -332,7 +370,7 @@ public class GameManagerBehavior : MonoBehaviour
 
     public void SleaseMode()
     {
-         _playerHP = 10000;
+         HP = 10000;
          RedArtifact = true;
          BlueArtifact = true;
         YellowArtifact = true;

@@ -80,7 +80,7 @@ public class PlayerBehavior : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         { _rb.AddForce(Vector3.up * jumpVelocity, ForceMode.Impulse); }
 
-        if (Input.GetKey(KeyCode.E) && gameManager.BlueArtifact && Time.time >= gameManager.counterCD + gameManager.countertime && charging == false && bashing == false)
+        if (Input.GetKeyDown(KeyCode.E) && gameManager.BlueArtifact && Time.time >= gameManager.counterCD + gameManager.countertime && charging == false && bashing == false)
         {
             counter = true;
             gameManager.countertime = Time.time;
