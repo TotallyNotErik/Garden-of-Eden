@@ -23,11 +23,16 @@ public class GameManagerBehavior : MonoBehaviour
     public GameObject bashUi;
     public GameObject ParryUI;
     public TextMeshProUGUI BulletsText;
+    public GameObject artifactDisplay;
     public GameObject hpUI;
+    public Color colorRed = new Color(1, 1, 1, 1);
+    public Color colorYellow;
+    public Color colorBlue;
 
     private bool pause = false;
     private bool showLossScreen = false;
     public float sensitivity = 1f;
+    public int artIndex = 3;
 
     public static GameManagerBehavior instance;
 
@@ -124,6 +129,8 @@ public class GameManagerBehavior : MonoBehaviour
         {
             _itemsCollected = value;
             Debug.LogFormat("Items: {0}", _itemsCollected);
+            if (_itemsCollected >= 3)
+                allitems = true;
         }
     }
 
@@ -134,6 +141,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             Red = value;
             magtext.SetActive(true);
+            displayArt(colorRed);
         }
     }
 
@@ -144,6 +152,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             Blue = value;
             ParryUI.SetActive(true);
+            displayArt(colorBlue);
         }
     }
 
@@ -154,6 +163,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             Yellow = value;
             bashUi.SetActive(true);
+            displayArt(colorYellow);
         }
     }
     private int _playerHP = 10;
@@ -258,21 +268,21 @@ public class GameManagerBehavior : MonoBehaviour
             {
                 if (Time.time < countertime + counterCD)
                 {
-                    ParryUI.transform.GetChild(0).gameObject.SetActive(true);
-                    ParryUI.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - countertime) / counterCD);
+                    ParryUI.transform.GetChild(1).gameObject.SetActive(true);
+                    ParryUI.transform.GetChild(1).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - countertime) / counterCD);
                 }
                 else
-                    ParryUI.transform.GetChild(0).gameObject.SetActive(false);
+                    ParryUI.transform.GetChild(1).gameObject.SetActive(false);
             }
             if (YellowArtifact)
             {
                 if (Time.time < chargeTimer + 3 + chargeTime * cdMultiplier)
                 {
-                    bashUi.transform.GetChild(0).gameObject.SetActive(true);
-                    bashUi.transform.GetChild(0).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - chargeTimer) / (3 + chargeTime * cdMultiplier));
+                    bashUi.transform.GetChild(1).gameObject.SetActive(true);
+                    bashUi.transform.GetChild(1).gameObject.GetComponent<Image>().fillAmount = 1 - ((Time.time - chargeTimer) / (3 + chargeTime * cdMultiplier));
                 }
                 else
-                    bashUi.transform.GetChild(0).gameObject.SetActive(false);
+                    bashUi.transform.GetChild(1).gameObject.SetActive(false);
             }
             if (YellowArtifact && RedArtifact && BlueArtifact)
             {
@@ -348,6 +358,14 @@ public class GameManagerBehavior : MonoBehaviour
         if(allitems && EnemyCount == 0)
             holybeam.SetActive(true);
             
+    }
+
+    public void displayArt(Color color)
+    {
+        Debug.Log("hi");
+        artifactDisplay.transform.GetChild(artIndex).gameObject.GetComponent<Image>().color = color;
+        artifactDisplay.transform.GetChild(artIndex).gameObject.transform.localScale += new Vector3(1, 1, 1);
+        artIndex++;
     }
 
     public void exitmap()

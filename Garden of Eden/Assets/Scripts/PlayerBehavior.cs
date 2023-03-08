@@ -45,7 +45,7 @@ public class PlayerBehavior : MonoBehaviour
     private float timeCharged = 0f;
 
     private bool counter = false;
-    private float counterDuration = 0.1f;
+    private float counterDuration = 0.25f;
 
     private float counterboostDur = 3f;
     private float counterboosttime = 0.0f;
