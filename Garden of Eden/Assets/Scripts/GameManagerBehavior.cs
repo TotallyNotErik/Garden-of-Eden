@@ -163,6 +163,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             Yellow = value;
             bashUi.SetActive(true);
+            bashUi.transform.GetChild(2).gameObject.SetActive(false);
             displayArt(colorYellow);
         }
     }

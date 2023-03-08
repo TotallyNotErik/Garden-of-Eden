@@ -133,7 +133,8 @@ public class PlayerBehavior : MonoBehaviour
 		    }
              moveMultiplier = 0.25f;
            	 charging = true;
-
+            gameManager.bashUi.transform.GetChild(0).gameObject.SetActive(false);
+            gameManager.bashUi.transform.GetChild(2).gameObject.SetActive(true);
 
         }
         else
@@ -148,6 +149,8 @@ public class PlayerBehavior : MonoBehaviour
                   bashing = true;
                   bashStart = Time.time;
                   moveMultiplier = 1f;
+                gameManager.bashUi.transform.GetChild(0).gameObject.SetActive(true);
+                gameManager.bashUi.transform.GetChild(2).gameObject.SetActive(false);
             }
              else if (charging)
              {
@@ -159,6 +162,8 @@ public class PlayerBehavior : MonoBehaviour
                 bashing = true;
                 bashStart = Time.time;
                 moveMultiplier = 1f;
+                gameManager.bashUi.transform.GetChild(0).gameObject.SetActive(true);
+                gameManager.bashUi.transform.GetChild(2).gameObject.SetActive(false);
             }
              
        	}
@@ -227,9 +232,10 @@ public class PlayerBehavior : MonoBehaviour
                     destroyer.HP-=2 ;
                 else
                     enemy.HP-= 2;
-                //gameManager.countertime -= (gameManager.counterCD / 2);
+                gameManager.countertime -= (gameManager.counterCD / 2);
                 moveMultiplier = 1.5f;
                 counterboosttime = Time.time;
+
             }
             else if (bashing == true)
             {
