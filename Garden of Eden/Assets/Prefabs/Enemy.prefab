@@ -112,6 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fdc7ccafba4d3d49beeacc5003aae94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitmat: {fileID: 2100000, guid: 21099a65f98a8ee49aff24168b89fd37, type: 2}
+  Default: {fileID: 2100000, guid: f50b63ff36cae8648bb3fa5f08dd9dd2, type: 2}
   patrolRoute: {fileID: 0}
   locations: []
   player: {fileID: 0}

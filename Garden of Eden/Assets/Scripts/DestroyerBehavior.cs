@@ -5,7 +5,8 @@ using UnityEngine.AI;
 
 public class DestroyerBehavior : MonoBehaviour
 {
-
+    public Material hitmat;
+    public Material Default;
     public Transform player;
     private UnityEngine.AI.NavMeshAgent agent;
 
@@ -17,6 +18,8 @@ public class DestroyerBehavior : MonoBehaviour
         set
         {
             _enemyHP = value;
+            this.transform.gameObject.GetComponent<Renderer>().material = hitmat;
+            Invoke("ResetMaterial", 0.1f);
             if (_enemyHP <= 0)
             {
                 Destroy(this.gameObject);
@@ -26,6 +29,10 @@ public class DestroyerBehavior : MonoBehaviour
             else
             { Debug.Log("Enemy Hp:" + _enemyHP); }
         }
+    }
+    void ResetMaterial()
+    {
+        this.transform.gameObject.GetComponent<Renderer>().material = Default;
     }
     void OnCollisionEnter(Collision other)
     {

@@ -5,7 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyBehavior : MonoBehaviour
 {
-
+    public Material hitmat;
+    public Material Default;
     public Transform patrolRoute;
     public List<Transform> locations;
     public Transform player;
@@ -21,8 +22,9 @@ public class EnemyBehavior : MonoBehaviour
         set 
         {
             _enemyHP = value;
-
-            if(_enemyHP <=0) 
+            this.transform.gameObject.GetComponent<Renderer>().material = hitmat;
+            Invoke("ResetMaterial", 0.1f);
+            if (_enemyHP <=0) 
             {
                 Destroy(this.gameObject);
                 Debug.Log("Enemy Defeated!");
@@ -30,6 +32,11 @@ public class EnemyBehavior : MonoBehaviour
             }
 
         }
+    }
+
+    void ResetMaterial()
+    {
+        this.transform.gameObject.GetComponent<Renderer>().material = Default;
     }
     void Start() 
     {

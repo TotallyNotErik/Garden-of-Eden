@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5120e82dc480ca444ac8a9f3b394372b, type: 2}
+  - {fileID: 2100000, guid: 1e51593c1ecefb047aaf6759499c3d07, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21ebfd6153fcea34293fba38e0a38afb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitParticles: {fileID: 9082465408494816068, guid: 7f5a126051cba7a49aa2a947578c4277, type: 3}
+  enemyHitParticles: {fileID: 8911374748924764589, guid: 382af32d4dccbb94bb24d719b977132d, type: 3}
 --- !u!65 &8865280276446672876
 BoxCollider:
   m_ObjectHideFlags: 0

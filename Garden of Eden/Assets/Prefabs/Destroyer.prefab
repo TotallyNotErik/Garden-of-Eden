@@ -112,6 +112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4669dfb35e6188f4f9e8e43bfd08056c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitmat: {fileID: 2100000, guid: 738817886bad6ea4e821497510167d71, type: 2}
+  Default: {fileID: 2100000, guid: 5122ffeef742e1646b48d8efc41445e6, type: 2}
   player: {fileID: 0}
   gameManager: {fileID: 0}
 --- !u!195 &-141980181423441734
