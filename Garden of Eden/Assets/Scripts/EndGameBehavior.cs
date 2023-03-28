@@ -12,7 +12,7 @@ public class EndGameBehavior : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        if (other.name == "Player" && gameManager.Items >= 3 && gameManager.EnemyCount <= 0)
+        if (other.name == "Player" && gameManager.Items >= 3)
         {
             gameManager.showWinScreen = true;
             Time.timeScale = 0f; 

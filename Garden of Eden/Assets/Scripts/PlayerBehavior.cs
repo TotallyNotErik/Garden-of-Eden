@@ -113,7 +113,7 @@ public class PlayerBehavior : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0) && gameManager.Magazine > 0)
             {
-                GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(0.6f, 0, 0), this.transform.rotation) as GameObject;
+                GameObject newBullet = Instantiate(bullet,  this.transform.position + this.transform.rotation * new Vector3(0.6f, 0, 1.5f), this.transform.rotation) as GameObject;
                 Rigidbody bulletRB = newBullet.GetComponent<Rigidbody>();
                 bulletRB.velocity =  Camera.transform.forward * bulletSpeed + Vector3.up * .025f * bulletSpeed;
                 gameManager.Magazine--;

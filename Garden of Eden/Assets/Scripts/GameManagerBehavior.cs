@@ -19,6 +19,7 @@ public class GameManagerBehavior : MonoBehaviour
     public GameObject minimap;
     public GameObject fullmap;
     public GameObject magtext;
+    public GameObject HUD;
     public GameObject dashUI;
     public GameObject bashUi;
     public GameObject ParryUI;
@@ -232,7 +233,7 @@ public class GameManagerBehavior : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
-
+            HUD.SetActive(false);
                 if(_playerHP <=5)
                 {
                     winscreenclose.SetActive(true);
@@ -254,6 +255,7 @@ public class GameManagerBehavior : MonoBehaviour
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
                 lossscreen.SetActive(true);
+            HUD.SetActive(false);
         }
         else
         {
@@ -352,11 +354,12 @@ public class GameManagerBehavior : MonoBehaviour
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
             Time.timeScale = 0f;
+            HUD.SetActive(false);
             pause = true;
             pausescreen.SetActive(true);
         }
 
-        if(allitems && EnemyCount == 0)
+        if(allitems)
             holybeam.SetActive(true);
             
     }
@@ -385,6 +388,7 @@ public class GameManagerBehavior : MonoBehaviour
         Time.timeScale = 1.0f;
         pause = false;
         pausescreen.SetActive(false);
+        HUD.SetActive(true);
     }
 
     public void SleaseMode()
