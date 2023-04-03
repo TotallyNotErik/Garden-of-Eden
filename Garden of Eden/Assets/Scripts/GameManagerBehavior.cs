@@ -36,6 +36,8 @@ public class GameManagerBehavior : MonoBehaviour
     public int artIndex = 3;
 
     public static GameManagerBehavior instance;
+    public PlayerBehavior movement;
+    public CameraMovementBehavior cam;
 
     private int maptog = 1;
     private int _itemsCollected = 0;
@@ -200,7 +202,8 @@ public class GameManagerBehavior : MonoBehaviour
 
             if (_playerHP <= 0) {
                 showLossScreen = true;
-                Time.timeScale = 0.0f;
+                movement.enabled = false;
+                cam.enabled = false;
             }
         }
     }
@@ -366,9 +369,8 @@ public class GameManagerBehavior : MonoBehaviour
 
     public void displayArt(Color color)
     {
-        Debug.Log("hi");
-        artifactDisplay.transform.GetChild(artIndex).gameObject.GetComponent<Image>().color = color;
-        artifactDisplay.transform.GetChild(artIndex).gameObject.transform.localScale += new Vector3(1, 1, 1);
+        artifactDisplay.transform.GetChild(artIndex%3 +3).gameObject.GetComponent<Image>().color = color;
+        artifactDisplay.transform.GetChild(artIndex%3 +3).gameObject.transform.localScale += new Vector3(1, 1, 1);
         artIndex++;
     }
 
