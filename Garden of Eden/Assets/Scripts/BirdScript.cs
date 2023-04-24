@@ -25,12 +25,11 @@ public class BirdScript : MonoBehaviour
         else
         {
             this.transform.LookAt(target);
-            int rand = UnityEngine.Random.Range(0, 10);
+            int rand = UnityEngine.Random.Range(0, 100);
             Debug.Log(rand);
             if (rand == 5)
             {
                 clip.Play();
-                Invoke("stopmusic", 1f);
             }
         }
 
