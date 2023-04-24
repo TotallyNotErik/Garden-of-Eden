@@ -9,6 +9,7 @@ public class DestroyerBehavior : MonoBehaviour
     public Material Default;
     public Transform player;
     private UnityEngine.AI.NavMeshAgent agent;
+    AudioSource audioSource;
 
     public GameManagerBehavior gameManager;
     private int _enemyHP = 5;
@@ -22,12 +23,10 @@ public class DestroyerBehavior : MonoBehaviour
             Invoke("ResetMaterial", 0.1f);
             if (_enemyHP <= 0)
             {
-                Destroy(this.gameObject);
-                Debug.Log("Enemy Defeated!");
                 gameManager.EnemyCount--;
+                Destroy(this.gameObject);
+                audioSource.Stop();
             }
-            else
-            { Debug.Log("Enemy Hp:" + _enemyHP); }
         }
     }
     void ResetMaterial()
@@ -50,7 +49,8 @@ public class DestroyerBehavior : MonoBehaviour
         gameManager.EnemyCount += 1;
         agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
         player = GameObject.Find("Player").transform;
-        
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
 
     }
     void Update()

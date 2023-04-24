@@ -10,11 +10,12 @@ public class BirdScript : MonoBehaviour
     private float birdreturn = 15f;
     private Vector3 pos;
     public GameObject bird;
-
+    AudioSource clip;
     void Start()
     {
         target = GameObject.Find("Player").transform;
         pos = this.transform.position;
+        clip = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -22,7 +23,14 @@ public class BirdScript : MonoBehaviour
         if (scared)
             this.transform.position += this.transform.rotation * new Vector3(0, 20, 15) * Time.deltaTime;
         else
+        {
             this.transform.LookAt(target);
+            int rand = UnityEngine.Random.Range(0, 10);
+            if (rand == 10)
+            {
+                clip.Play();
+            }
+        }
 
         if (Time.time > birdtimer + birdreturn && scared)
         {
