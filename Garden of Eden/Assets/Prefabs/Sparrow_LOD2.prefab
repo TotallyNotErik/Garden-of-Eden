@@ -556,10 +556,10 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: -5309044506923739126, guid: 862502535c10a9f4c839f2542a32dce8, type: 2}
   m_audioClip: {fileID: 8300000, guid: 1cdab9e07461ac544bf1e5201df6f3f4, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
+  m_Pitch: 0.2
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0

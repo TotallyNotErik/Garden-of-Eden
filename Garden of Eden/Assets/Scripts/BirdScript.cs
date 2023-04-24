@@ -29,6 +29,7 @@ public class BirdScript : MonoBehaviour
             if (rand == 10)
             {
                 clip.Play();
+                Invoke("stopmusic", 1f);
             }
         }
 
@@ -47,5 +48,9 @@ public class BirdScript : MonoBehaviour
             birdtimer = Time.time;
         }
 
+    }
+    void stopmusic()
+    {
+        clip.Stop();
     }
 }
